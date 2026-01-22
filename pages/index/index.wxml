@@ -1,0 +1,76 @@
+<!--pages/index/index.wxml-->
+<view class="page">
+  <!-- 头部区域 -->
+  <view class="header">
+    <view class="header-title">失恋反击战</view>
+    <view class="header-subtitle">打完就释怀,笑着向前看</view>
+  </view>
+
+  <!-- 主要内容区 -->
+  <view class="content">
+    <!-- 主CTA按钮 -->
+    <view class="main-cta" bindtap="startGame">
+      <view class="cta-icon">👊</view>
+      <view class="cta-title">暴揍前任</view>
+      <view class="cta-subtitle">选择渣男类型,开始宣泄</view>
+    </view>
+
+    <!-- 次要CTA按钮 -->
+    <view class="secondary-cta" bindtap="startTest">
+      <view class="cta-icon">🎯</view>
+      <view class="cta-title">测渣男类型</view>
+      <view class="cta-subtitle">5个问题,测测你的渣男类型</view>
+    </view>
+
+    <!-- 社区入口 -->
+    <view class="community-cta" bindtap="goCommunity">
+      <view class="cta-icon">💬</view>
+      <view class="cta-title">释怀树洞</view>
+      <view class="cta-subtitle">分享你的故事,获取温暖支持</view>
+    </view>
+  </view>
+
+  <!-- 底部引导 -->
+  <view class="footer">
+    <view class="footer-text">已有 {{userCount}} 位姐妹获得释怀</view>
+    <view class="footer-subtext">你也来试试吧~</view>
+  </view>
+
+  <!-- 新手引导弹窗 -->
+  <view class="guide-modal {{showGuide ? 'show' : ''}}" wx:if="{{showGuide}}">
+    <view class="guide-mask" bindtap="closeGuide"></view>
+    <swiper class="guide-swiper" current="{{guideStep}}" bindchange="onGuideChange">
+      <swiper-item>
+        <view class="guide-item">
+          <view class="guide-icon">👊</view>
+          <view class="guide-title">第一步: 选择渣男类型</view>
+          <view class="guide-desc">从6种渣男类型中选择最让你不爽的那个</view>
+        </view>
+      </swiper-item>
+      <swiper-item>
+        <view class="guide-item">
+          <view class="guide-icon">💥</view>
+          <view class="guide-title">第二步: 开始暴揍</view>
+          <view class="guide-desc">点击屏幕攻击,连续点击触发连击特效</view>
+        </view>
+      </swiper-item>
+      <swiper-item>
+        <view class="guide-item">
+          <view class="guide-icon">❤️</view>
+          <view class="guide-title">第三步: 完成释怀</view>
+          <view class="guide-desc">获得专属释怀卡片,分享给姐妹们</view>
+        </view>
+      </swiper-item>
+    </swiper>
+    <view class="guide-footer">
+      <view class="guide-dots">
+        <view class="dot {{guideStep === 0 ? 'active' : ''}}"></view>
+        <view class="dot {{guideStep === 1 ? 'active' : ''}}"></view>
+        <view class="dot {{guideStep === 2 ? 'active' : ''}}"></view>
+      </view>
+      <button class="guide-btn" wx:if="{{guideStep < 2}}" bindtap="nextGuide">下一步</button>
+      <button class="guide-btn primary" wx:else bindtap="startGameFromGuide">开始游戏</button>
+      <view class="guide-skip" bindtap="closeGuide">跳过</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,77 @@
+<!--pages/test/test.wxml-->
+<view class="page">
+  <!-- 测试标题 -->
+  <view class="header">
+    <view class="header-icon">🎯</view>
+    <view class="header-title">测测你的渣男类型</view>
+    <view class="header-subtitle">5个问题,测出你的前任是什么类型</view>
+  </view>
+
+  <!-- 进度条 -->
+  <view class="progress-bar" wx:if="{{currentStep < questions.length}}">
+    <view class="progress-fill" style="width: {{progress}}%;"></view>
+  </view>
+
+  <!-- 问题区域 -->
+  <view class="question-container" wx:if="{{currentStep < questions.length}}">
+    <view class="question-number">问题 {{currentStep + 1}}/{{questions.length}}</view>
+    <view class="question-text">{{questions[currentStep].question}}</view>
+
+    <view class="options-list">
+      <view
+        class="option-item {{selectedOption === index ? 'selected' : ''}}"
+        wx:for="{{questions[currentStep].options}}"
+        wx:key="index"
+        wx:for-index="index"
+        wx:for-item="option"
+        bindtap="selectOption"
+        data-index="{{index}}"
+      >
+        <view class="option-label">{{option.label}}</view>
+        <view class="option-text">{{option.text}}</view>
+        <view class="option-check" wx:if="{{selectedOption === index}}">✓</view>
+      </view>
+    </view>
+
+    <button class="next-btn" bindtap="nextQuestion" disabled="{{selectedOption === null}}">
+      {{currentStep === questions.length - 1 ? '查看结果' : '下一题'}}
+    </button>
+  </view>
+
+  <!-- 结果区域 -->
+  <view class="result-container" wx:if="{{currentStep === questions.length && testResult}}">
+    <view class="result-icon">{{testResult.emoji}}</view>
+    <view class="result-title">{{testResult.title}}</view>
+    <view class="result-subtitle">{{testResult.subtitle}}</view>
+
+    <view class="result-card">
+      <view class="card-section">
+        <view class="section-title">你的渣男类型</view>
+        <view class="section-content">{{testResult.scumbagType}}</view>
+      </view>
+
+      <view class="card-section">
+        <view class="section-title">你的性格</view>
+        <view class="section-content">{{testResult.yourPersonality}}</view>
+      </view>
+
+      <view class="card-section">
+        <view class="section-title">匹配建议</view>
+        <view class="section-content">{{testResult.matchAdvice}}</view>
+      </view>
+    </view>
+
+    <view class="action-buttons">
+      <button class="action-btn primary" bindtap="playGame">
+        <view class="btn-icon">👊</view>
+        <view class="btn-text">去揍他</view>
+      </button>
+      <button class="action-btn secondary" open-type="share">
+        <view class="btn-icon">📤</view>
+        <view class="btn-text">分享结果</view>
+      </button>
+    </view>
+
+    <button class="retry-btn" bindtap="retryTest">重新测试</button>
+  </view>
+</view>

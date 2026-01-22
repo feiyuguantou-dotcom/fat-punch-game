@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>胖揍前男友 - 解压小游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .game-container {
+            max-width: 430px;
+            margin: 0 auto;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 页面基础样式 */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px) rotate(-2deg); }
+            75% { transform: translateX(10px) rotate(2deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-100px); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes dizzy {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(-5px) rotate(-5deg); }
+            75% { transform: translateX(5px) rotate(5deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
+        }
+
+        /* 首页样式 */
+        #home-page {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 首页背景装饰 */
+        .home-bg-decoration {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .floating-star {
+            position: absolute;
+            font-size: 24px;
+            animation: floatUp 3s ease-in-out infinite;
+            opacity: 0.4;
+            filter: drop-shadow(0 0 10px rgba(255,71,87,0.5));
+        }
+
+        /* 首页封面容器 */
+        .hero-cover {
+            width: 100%;
+            height: 45vh;
+            background: linear-gradient(180deg, rgba(255,87,87,0.15) 0%, rgba(255,71,87,0.08) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-direction: column;
+            padding: 20px;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+
+        /* 暴怒头像 */
+        .knocked-out-character {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .character-body {
+            font-size: 0;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 15px 30px rgba(255,0,0,0.4));
+        }
+
+        .character-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid rgba(255,71,87,0.5);
+            box-shadow: 0 0 30px rgba(255,0,0,0.5);
+        }
+
+        /* 愤怒火焰特效 */
+        .anger-flames {
+            position: absolute;
+            font-size: 35px;
+            animation: flameFlicker 0.5s ease-in-out infinite alternate;
+            z-index: 3;
+        }
+
+        @keyframes flameFlicker {
+            0% { transform: scale(1) translateY(0); opacity: 0.8; }
+            100% { transform: scale(1.1) translateY(-5px); opacity: 1; }
+        }
+
+        .swirl-effect {
+            position: absolute;
+            font-size: 40px;
+            top: -20px;
+            right: -10px;
+            animation: spin 2s linear infinite;
+            z-index: 3;
+        }
+
+        .stars-head {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 5px;
+            z-index: 4;
+        }
+
+        .star {
+            font-size: 28px;
+            animation: twinkle 1s ease-in-out infinite;
+        }
+
+        .star:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .star:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        /* 拳印装饰 */
+        .fist-print {
+            position: absolute;
+            font-size: 30px;
+            opacity: 0.7;
+        }
+
+        /* 弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 25px;
+            padding: 35px 30px;
+            text-align: center;
+            max-width: 320px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+            animation: modalPop 0.3s ease;
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-emoji {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF6B9D;
+            margin-bottom: 12px;
+        }
+
+        .modal-desc {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .modal-btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn-primary {
+            background: linear-gradient(135deg, #FF6B9D 0%, #FF4081 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255,107,157,0.4);
+        }
+
+        .modal-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,107,157,0.5);
+        }
+
+        .modal-btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .modal-btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
+        .title-section {
+            text-align: center;
+            padding: 30px 20px;
+            z-index: 1;
+        }
+
+        .game-title {
+            font-size: 42px;
+            font-weight: 900;
+            color: #FF4757;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255,71,87,0.8), 2px 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 2px;
+            animation: titlePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { text-shadow: 0 0 20px rgba(255,71,87,0.8), 2px 2px 4px rgba(0,0,0,0.5); }
+            50% { text-shadow: 0 0 30px rgba(255,71,87,1), 2px 2px 4px rgba(0,0,0,0.5); }
+        }
+
+        .game-subtitle {
+            font-size: 18px;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FF4757 0%, #FF3838 100%);
+            color: white;
+            border: none;
+            padding: 18px 60px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            box-shadow: 0 8px 25px rgba(255,71,87,0.5);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255,71,87,0.7);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 15px 50px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        /* 角色选择页 */
+        #select-page {
+            background: linear-gradient(135deg, #FFE5EC 0%, #FFF5F7 100%);
+            padding: 20px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #FF6B9D;
+            cursor: pointer;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF6B9D;
+        }
+
+        .cards-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 16px;
+            padding: 20px 10px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .cards-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .character-card {
+            flex: 0 0 280px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            scroll-snap-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .character-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        .character-card.selected {
+            border: 3px solid #FF6B9D;
+            transform: scale(1.02);
+        }
+
+        .character-emoji {
+            font-size: 80px;
+            margin-bottom: 15px;
+        }
+
+        .character-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .character-quote {
+            font-size: 16px;
+            color: #999;
+            font-style: italic;
+        }
+
+        .confirm-btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        /* 游戏战斗页 */
+        #game-page {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            position: relative;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .blood-bar-container {
+            flex: 1;
+            margin: 0 15px;
+        }
+
+        .blood-bar-bg {
+            width: 100%;
+            height: 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .blood-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width 0.3s ease, background 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .blood-text {
+            color: white;
+            font-size: 14px;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .combo-display {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 48px;
+            font-weight: bold;
+            color: #FF6B9D;
+            text-shadow: 0 0 20px rgba(255,107,157,0.8);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .combo-display.show {
+            opacity: 1;
+            animation: pulse 0.5s ease;
+        }
+
+        .game-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .character-display {
+            font-size: 150px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
+            position: relative;
+        }
+
+        .character-display.hit {
+            animation: shake 0.3s ease;
+        }
+
+        /* 图片模式样式 */
+        .character-display {
+            width: 200px;
+            height: 200px;
+            position: relative;
+        }
+
+        .character-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid rgba(255,107,157,0.3);
+            transition: all 0.5s ease;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+        }
+
+        .character-display.hit .character-image {
+            animation: shake 0.3s ease;
+        }
+
+        /* 动物元素叠加层 */
+        .animal-overlay {
+            position: absolute;
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+
+        /* 猪鼻子 */
+        .pig-nose {
+            font-size: 40px;
+            bottom: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+        }
+
+        /* 猪耳朵 */
+        .pig-ear {
+            font-size: 50px;
+            top: -20px;
+            opacity: 0;
+        }
+
+        .pig-ear.left {
+            left: -10px;
+            transform: rotate(-30deg);
+        }
+
+        .pig-ear.right {
+            right: -10px;
+            transform: rotate(30deg);
+        }
+
+        /* 腮红 */
+        .blush {
+            font-size: 30px;
+            top: 50%;
+            opacity: 0;
+        }
+
+        .blush.left {
+            left: 10px;
+        }
+
+        .blush.right {
+            right: 10px;
+        }
+
+        /* 阶段2效果 */
+        .stage-2 .pig-nose {
+            opacity: 1;
+        }
+
+        /* 阶段3效果 */
+        .stage-3 .pig-nose,
+        .stage-3 .pig-ear,
+        .stage-3 .blush {
+            opacity: 1;
+        }
+
+        /* 阶段4效果 - 完全变成动物 */
+        .stage-4 .character-image {
+            border-radius: 50%;
+            filter: saturate(0.3) brightness(1.1);
+            transform: scale(0.8);
+        }
+
+        .stage-4 .animal-overlay {
+            opacity: 1;
+        }
+
+        /* 青蛙变形 */
+        .transform-frog .character-image {
+            filter: hue-rotate(60deg) saturate(1.5);
+        }
+
+        /* 猪变形 */
+        .transform-pig .character-image {
+            filter: hue-rotate(-20deg) saturate(0.8) brightness(1.1);
+        }
+
+        .damage-number {
+            position: absolute;
+            font-size: 36px;
+            font-weight: bold;
+            color: #FF6B9D;
+            pointer-events: none;
+            animation: floatUp 1s ease forwards;
+        }
+
+        .attack-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .skill-btn {
+            background: linear-gradient(135deg, #FF6B9D 0%, #FF4081 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255,107,157,0.4);
+            transition: all 0.3s ease;
+        }
+
+        .skill-btn:active {
+            transform: scale(0.95);
+        }
+
+        .skill-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .speech-bubble {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 15px 25px;
+            border-radius: 20px;
+            font-size: 16px;
+            color: #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .speech-bubble.show {
+            opacity: 1;
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid white;
+        }
+
+        /* 结果页 */
+        #result-page {
+            background: linear-gradient(135deg, #FFE5EC 0%, #FFF5F7 100%);
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 30px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .result-emoji {
+            font-size: 100px;
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #FF6B9D;
+            margin-bottom: 15px;
+        }
+
+        .result-message {
+            font-size: 18px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .stats-info {
+            background: #FFF5F7;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .stat-value {
+            color: #FF6B9D;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .result-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        /* 测试页 */
+        #test-page {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            padding: 20px;
+            align-items: center;
+        }
+
+        .test-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .test-question {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .test-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .test-option {
+            background: #F5F5F5;
+            border: 2px solid transparent;
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 16px;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .test-option:hover {
+            background: #E8F5E9;
+            border-color: #4CAF50;
+        }
+
+        .test-result {
+            text-align: center;
+        }
+
+        .result-type {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF6B9D;
+            margin-bottom: 15px;
+        }
+
+        .result-desc {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- 首页 -->
+        <div id="home-page" class="page active">
+            <!-- 背景装饰星星 -->
+            <div class="home-bg-decoration" id="bgDecoration"></div>
+
+            <!-- 封面图区域 -->
+            <div class="hero-cover">
+                <!-- 暴怒渣男 -->
+                <div class="knocked-out-character">
+                    <!-- 愤怒火焰 -->
+                    <div class="anger-flames" style="top: -15px; left: 20px;">🔥</div>
+                    <div class="anger-flames" style="top: -15px; right: 20px; animation-delay: 0.2s;">🔥</div>
+                    <div class="anger-flames" style="bottom: -10px; left: 50%; transform: translateX(-50%); animation-delay: 0.4s;">💢</div>
+
+                    <!-- 旋转眩晕符号 -->
+                    <div class="swirl-effect">💢</div>
+
+                    <!-- 暴怒图片 -->
+                    <div class="character-body">
+                        <img class="character-image" src="images/暴怒.png" alt="暴怒渣男" onerror="this.src='https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/4b8e014f-ab79-456e-ae47-7a896683c68b/暴怒.png?UCloudPublicKey=TOKEN_e15ba47a-d098-4fbd-9afc-a0dcf0e4e621&Expires=1769081035&Signature=evvDgL22VzlSLuzMhNa+zXBNO5U='">
+                    </div>
+
+                    <!-- 拳印装饰 -->
+                    <div class="fist-print" style="top: 20px; left: -15px; transform: rotate(-30deg);">👊</div>
+                    <div class="fist-print" style="top: 40px; right: -20px; transform: rotate(25deg);">👊</div>
+                    <div class="fist-print" style="bottom: 10px; left: 5px; transform: rotate(-20deg); font-size: 28px;">💥</div>
+                </div>
+            </div>
+
+            <!-- 标题区域 -->
+            <div class="title-section">
+                <div class="game-title">胖揍前男友</div>
+                <div class="game-subtitle">解压神器，爽到飞起！💪</div>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div style="display: flex; flex-direction: column; gap: 15px; padding: 0 40px 40px; z-index: 1;">
+                <button class="btn-primary" onclick="showStartModal()">👊 开始胖揍</button>
+            </div>
+        </div>
+
+        <!-- 开始游戏弹窗 -->
+        <div class="modal-overlay" id="startModal">
+            <div class="modal-content">
+                <div class="modal-emoji">🤔</div>
+                <div class="modal-title">准备好了吗？</div>
+                <div class="modal-desc">先测测你的渣男类型，然后自动匹配开始胖揍！</div>
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-btn-primary" onclick="startWithTest()">📝 先测渣男类型</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 角色选择页 -->
+        <div id="select-page" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showHomePage()">←</button>
+                <div class="page-title">选择渣男类型</div>
+            </div>
+            <div class="cards-container" id="cardsContainer"></div>
+            <div class="confirm-btn-container">
+                <button class="btn-secondary" onclick="showHomePage()">跳过</button>
+                <button class="btn-primary" onclick="startGame()">确认选择</button>
+            </div>
+        </div>
+
+        <!-- 游戏战斗页 -->
+        <div id="game-page" class="page">
+            <div class="game-header">
+                <span style="color: white; font-size: 24px;">⏸️</span>
+                <div class="blood-bar-container">
+                    <div class="blood-bar-bg">
+                        <div class="blood-bar" id="bloodBar"></div>
+                    </div>
+                    <div class="blood-text" id="bloodText">100/100</div>
+                </div>
+            </div>
+
+            <div class="combo-display" id="comboDisplay">连击 x3!</div>
+
+            <div class="game-area">
+                <div class="character-display" id="gameCharacter" onclick="attackCharacter(event)">
+                    <img class="character-image" id="characterImage" src="images/1.jpg" onerror="this.src='https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/4b8e014f-ab79-456e-ae47-7a896683c68b/1.jpg?UCloudPublicKey=TOKEN_e15ba47a-d098-4fbd-9afc-a0dcf0e4e621&Expires=1769082365&Signature=cny/DY6bTQifdkNrxlpn9fM4C9o='" alt="角色">
+                </div>
+                <div class="speech-bubble" id="speechBubble">我忙...</div>
+            </div>
+
+            <div class="attack-buttons">
+                <button class="skill-btn" onclick="useSkill('combo')">⚡ 连击</button>
+                <button class="skill-btn" onclick="useSkill('special')">💥 大招</button>
+            </div>
+        </div>
+
+        <!-- 结果页 -->
+        <div id="result-page" class="page">
+            <div class="result-card">
+                <img src="images/2.png" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #FF4757; box-shadow: 0 10px 30px rgba(255,71,87,0.5); margin-bottom: 20px;" onerror="this.src='https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/4b8e014f-ab79-456e-ae47-7a896683c68b/2.png?UCloudPublicKey=TOKEN_e15ba47a-d098-4fbd-9afc-a0dcf0e4e621&Expires=1769082365&Signature=aADs3OuYD+UZY+CC0klrx6bR5ZM='">
+                <div class="result-title">原谅他吧</div>
+                <div class="result-message">他每时每刻都在想你❤️</div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 300px;">
+                <button class="btn-primary" onclick="showHomePage()">好的</button>
+            </div>
+        </div>
+
+        <!-- 测试页 -->
+        <div id="test-page" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showHomePage()">←</button>
+                <div class="page-title">渣男类型测试</div>
+            </div>
+            <div class="test-card" id="testCard">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 20%"></div>
+                </div>
+                <div id="testContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 音效系统
+        class SoundManager {
+            constructor() {
+                this.audioContext = null;
+                this.enabled = true;
+            }
+
+            init() {
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                } catch (e) {
+                    console.warn('Web Audio API not supported');
+                    this.enabled = false;
+                }
+            }
+
+            playTone(frequency, duration, type = 'sine') {
+                if (!this.enabled || !this.audioContext) return;
+
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(this.audioContext.destination);
+
+                oscillator.frequency.value = frequency;
+                oscillator.type = type;
+
+                gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
+
+                oscillator.start(this.audioContext.currentTime);
+                oscillator.stop(this.audioContext.currentTime + duration);
+            }
+
+            playHit() {
+                this.playTone(300, 0.1, 'square');
+            }
+
+            playCombo() {
+                this.playTone(500, 0.15, 'sawtooth');
+            }
+
+            playSpecial() {
+                this.playTone(200, 0.3, 'square');
+                setTimeout(() => this.playTone(400, 0.3, 'square'), 100);
+            }
+
+            playWin() {
+                const notes = [523, 659, 784, 1047];
+                notes.forEach((note, i) => {
+                    setTimeout(() => this.playTone(note, 0.3, 'sine'), i * 150);
+                });
+            }
+
+            playClick() {
+                this.playTone(800, 0.05, 'sine');
+            }
+        }
+
+        const soundManager = new SoundManager();
+
+        // 游戏数据
+        const characters = [
+            { id: 1, name: '冷暴力渣男', emoji: '💀', quote: '我忙...', quotes: ['我忙...', '你想多了', '别闹'] },
+            { id: 2, name: '出轨渣男', emoji: '🔥', quote: '只是朋友', quotes: ['只是朋友', '你想多了', '相信我'] },
+            { id: 3, name: '抠门渣男', emoji: '💰', quote: '太贵了', quotes: ['太贵了', '没必要', '省着点'] },
+            { id: 4, name: '撒谎渣男', emoji: '🎭', quote: '真的！', quotes: ['真的！', '我发誓', '没骗你'] },
+            { id: 5, name: '妈宝渣男', emoji: '👻', quote: '我妈说...', quotes: ['我妈说...', '问问我妈', '听我妈的'] },
+            { id: 6, name: '无缝衔接渣男', emoji: '💔', quote: '我们只是同事', quotes: ['只是同事', '普通朋友', '你想多了'] }
+        ];
+
+        const testQuestions = [
+            {
+                question: '你的前任最常说的是？',
+                options: ['A. 我忙', 'B. 你无理取闹', 'C. 都是你的错']
+            },
+            {
+                question: '分手时他的反应是？',
+                options: ['A. 冷暴力', 'B. 立刻有新欢', 'C. 痛哭流涕']
+            },
+            {
+                question: '你最想对他说什么？',
+                options: ['A. 滚!', 'B. 祝你幸福', 'C. 为什么?']
+            },
+            {
+                question: '如果有机会，你会？',
+                options: ['A. 揍他', 'B. 骂他', 'C. 无视他']
+            },
+            {
+                question: '你现在的心情是？',
+                options: ['A. 愤怒', 'B. 不甘心', 'C. 释怀']
+            }
+        ];
+
+        const testResults = [
+            { type: '冷暴力型受害者', emoji: '💀', title: '冷暴力型受害者', desc: '你遇到了典型的冷暴力渣男！他总是忽冷忽热，让你患得患失。记住，好的感情需要双向奔赴，不值得的人就让他滚蛋！' },
+            { type: '理智女王', emoji: '👑', title: '理智女王', desc: '你非常理智，能够冷静处理感情问题。即使在分手时也能保持体面。这种态度非常棒，你值得更好的人！' },
+            { type: '深情小兔', emoji: '🐰', title: '深情小兔', desc: '你是一个深情的人，容易对感情投入真心。虽然受过伤，但依然相信爱情。保持这份纯真，对的人正在路上！' }
+        ];
+
+        // 游戏状态
+        let selectedCharacter = characters[0];
+        let blood = 100;
+        let maxBlood = 100;
+        let attackCount = 0;
+        let comboCount = 0;
+        let maxCombo = 0;
+        let lastAttackTime = 0;
+        let currentTestQuestion = 0;
+        let testAnswers = [];
+
+        // 初始化角色卡片
+        function initCharacterCards() {
+            const container = document.getElementById('cardsContainer');
+            container.innerHTML = characters.map(char => `
+                <div class="character-card ${char.id === selectedCharacter.id ? 'selected' : ''}"
+                     onclick="selectCharacter(${char.id})">
+                    <div class="character-emoji">${char.emoji}</div>
+                    <div class="character-name">${char.name}</div>
+                    <div class="character-quote">${char.quote}</div>
+                </div>
+            `).join('');
+        }
+
+        // 选择角色
+        function selectCharacter(id) {
+            selectedCharacter = characters.find(c => c.id === id);
+            initCharacterCards();
+        }
+
+        // 页面切换
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function showHomePage() {
+            showPage('home-page');
+        }
+
+        function showSelectPage() {
+            initCharacterCards();
+            showPage('select-page');
+        }
+
+        function showTestPage() {
+            currentTestQuestion = 0;
+            testAnswers = [];
+            showTestQuestion();
+            showPage('test-page');
+        }
+
+        // 开始游戏
+        function startGame() {
+            soundManager.init();
+            blood = maxBlood;
+            attackCount = 0;
+            comboCount = 0;
+            maxCombo = 0;
+
+            // 重置为图片1
+            const charImage = document.getElementById('characterImage');
+            charImage.src = 'images/1.jpg';
+            charImage.onerror = function() {
+                this.src = 'https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/4b8e014f-ab79-456e-ae47-7a896683c68b/1.jpg?UCloudPublicKey=TOKEN_e15ba47a-d098-4fbd-9afc-a0dcf0e4e621&Expires=1769082365&Signature=cny/DY6bTQifdkNrxlpn9fM4C9o=';
+            };
+
+            updateBloodBar();
+            showPage('game-page');
+
+            // 显示初始对话
+            showSpeech(selectedCharacter.quote);
+        }
+
+        // 更新血条
+        function updateBloodBar() {
+            const percentage = (blood / maxBlood) * 100;
+            const bloodBar = document.getElementById('bloodBar');
+            const bloodText = document.getElementById('bloodText');
+
+            bloodBar.style.width = percentage + '%';
+
+            if (percentage > 60) {
+                bloodBar.style.background = 'linear-gradient(90deg, #4CAF50, #8BC34A)';
+            } else if (percentage > 30) {
+                bloodBar.style.background = 'linear-gradient(90deg, #FF9800, #FFC107)';
+            } else {
+                bloodBar.style.background = 'linear-gradient(90deg, #F44336, #FF5722)';
+            }
+
+            bloodText.textContent = `${blood}/${maxBlood}`;
+        }
+
+        // 更新角色显示
+        function updateCharacter() {
+            const charDisplay = document.getElementById('gameCharacter');
+            charDisplay.textContent = selectedCharacter.emoji;
+        }
+
+        // 显示对话
+        function showSpeech(text) {
+            const bubble = document.getElementById('speechBubble');
+            bubble.textContent = text;
+            bubble.classList.add('show');
+
+            setTimeout(() => {
+                bubble.classList.remove('show');
+            }, 2000);
+        }
+
+        // 攻击角色
+        function attackCharacter(event) {
+            const now = Date.now();
+
+            // 连击判定
+            if (now - lastAttackTime < 500) {
+                comboCount++;
+                if (comboCount > maxCombo) {
+                    maxCombo = comboCount;
+                }
+            } else {
+                comboCount = 1;
+            }
+
+            lastAttackTime = now;
+
+            // 计算伤害
+            const damage = comboCount >= 3 ? 2 : 1;
+            blood -= damage;
+            attackCount++;
+
+            // 视觉反馈
+            const charDisplay = document.getElementById('gameCharacter');
+            charDisplay.classList.add('hit');
+            setTimeout(() => charDisplay.classList.remove('hit'), 300);
+
+            // 播放音效
+            soundManager.playHit();
+
+            // 显示伤害数字
+            showDamageNumber(event, damage);
+
+            // 显示连击
+            if (comboCount >= 3) {
+                showCombo(comboCount);
+            }
+
+            // 更新血条
+            updateBloodBar();
+
+            // 随机显示对话
+            if (Math.random() > 0.7) {
+                const randomQuote = selectedCharacter.quotes[Math.floor(Math.random() * selectedCharacter.quotes.length)];
+                showSpeech(randomQuote);
+            }
+
+            // 检查游戏结束
+            if (blood <= 0) {
+                blood = 0;
+                updateBloodBar();
+                setTimeout(endGame, 500);
+            }
+
+            // 震动反馈
+            if (navigator.vibrate) {
+                navigator.vibrate(10);
+            }
+        }
+
+        // 显示伤害数字
+        function showDamageNumber(event, damage) {
+            const gameArea = document.querySelector('.game-area');
+            const damageNum = document.createElement('div');
+            damageNum.className = 'damage-number';
+            damageNum.textContent = `-${damage}`;
+            damageNum.style.left = (event.clientX - gameArea.getBoundingClientRect().left) + 'px';
+            damageNum.style.top = (event.clientY - gameArea.getBoundingClientRect().top) + 'px';
+            gameArea.appendChild(damageNum);
+
+            setTimeout(() => damageNum.remove(), 1000);
+        }
+
+        // 显示连击
+        function showCombo(combo) {
+            const comboDisplay = document.getElementById('comboDisplay');
+            comboDisplay.textContent = `连击 x${combo}!`;
+            comboDisplay.classList.add('show');
+
+            setTimeout(() => {
+                comboDisplay.classList.remove('show');
+            }, 500);
+        }
+
+        // 使用技能
+        function useSkill(type) {
+            if (type === 'combo') {
+                const damage = 5;
+                blood -= damage;
+                attackCount += 5;
+                showCombo(5);
+                showSpeech('啊！！！');
+                soundManager.playCombo();
+
+                if (navigator.vibrate) {
+                    navigator.vibrate(30);
+                }
+            } else if (type === 'special') {
+                const damage = 10;
+                blood -= damage;
+                attackCount += 10;
+                showSpeech('我错了！！！');
+                soundManager.playSpecial();
+
+                if (navigator.vibrate) {
+                    navigator.vibrate([50, 50, 50]);
+                }
+            }
+
+            updateBloodBar();
+
+            if (blood <= 0) {
+                blood = 0;
+                updateBloodBar();
+                setTimeout(endGame, 500);
+            }
+        }
+
+        // 游戏结束
+        function endGame() {
+            soundManager.playWin();
+
+            // 将图片变成被揍后的样子
+            const charImage = document.getElementById('characterImage');
+            charImage.src = 'images/2.png';
+            charImage.onerror = function() {
+                this.src = 'https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/4b8e014f-ab79-456e-ae47-7a896683c68b/2.png?UCloudPublicKey=TOKEN_e15ba47a-d098-4fbd-9afc-a0dcf0e4e621&Expires=1769082365&Signature=aADs3OuYD+UZY+CC0klrx6bR5ZM=';
+            };
+
+            // 延迟一下显示结果页
+            setTimeout(() => {
+                showPage('result-page');
+            }, 1000);
+        }
+
+        // 分享结果
+        function shareResult() {
+            const text = `我在《失恋反击战》中暴揍了${selectedCharacter.name}${attackCount}次，最高${maxCombo}连击！你也来试试吧！`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: '失恋反击战',
+                    text: text,
+                    url: window.location.href
+                }).catch(() => {
+                    alert('分享内容：\n' + text);
+                });
+            } else {
+                alert('分享内容：\n' + text);
+            }
+        }
+
+        // 显示测试问题
+        function showTestQuestion() {
+            const content = document.getElementById('testContent');
+            const progressFill = document.getElementById('progressFill');
+
+            if (currentTestQuestion < testQuestions.length) {
+                const q = testQuestions[currentTestQuestion];
+                progressFill.style.width = ((currentTestQuestion + 1) / testQuestions.length * 100) + '%';
+
+                content.innerHTML = `
+                    <div class="test-question">${q.question}</div>
+                    <div class="test-options">
+                        ${q.options.map((opt, i) => `
+                            <button class="test-option" onclick="answerTest(${i})">${opt}</button>
+                        `).join('')}
+                    </div>
+                `;
+            } else {
+                showTestResult();
+            }
+        }
+
+        // 直接从游戏进入测试（跳过选择页）
+        function startWithTest() {
+            closeModal();
+            currentTestQuestion = 0;
+            testAnswers = [];
+            showTestQuestion();
+            showPage('test-page');
+        }
+
+        // 显示开始弹窗
+        function showStartModal() {
+            document.getElementById('startModal').classList.add('show');
+        }
+
+        // 关闭弹窗
+        function closeModal() {
+            document.getElementById('startModal').classList.remove('show');
+        }
+
+        // 回答问题
+        function answerTest(index) {
+            testAnswers.push(index);
+            currentTestQuestion++;
+            showTestQuestion();
+        }
+
+        // 显示测试结果
+        function showTestResult() {
+            const content = document.getElementById('testContent');
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = '100%';
+
+            // 根据答案计算渣男类型
+            const score = testAnswers.reduce((a, b) => a + b, 0);
+
+            // 映射分数到渣男类型
+            let characterId;
+            if (score <= 3) {
+                characterId = 1; // 冷暴力渣男
+            } else if (score <= 6) {
+                characterId = 2; // 出轨渣男
+            } else if (score <= 8) {
+                characterId = 3; // 抠门渣男
+            } else if (score <= 10) {
+                characterId = 4; // 撒谎渣男
+            } else {
+                characterId = 5; // 妈宝渣男
+            }
+
+            const matchedCharacter = characters.find(c => c.id === characterId);
+
+            // 选择对应的渣男类型
+            selectedCharacter = matchedCharacter;
+
+            content.innerHTML = `
+                <div class="test-result">
+                    <img src="images/1.jpg" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 5px solid #FF4757; box-shadow: 0 10px 30px rgba(255,71,87,0.5); margin-bottom: 20px;" onerror="this.src='https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/4b8e014f-ab79-456e-ae47-7a896683c68b/1.jpg?UCloudPublicKey=TOKEN_e15ba47a-d098-4fbd-9afc-a0dcf0e4e621&Expires=1769082365&Signature=cny/DY6bTQifdkNrxlpn9fM4C9o='">
+                    <div class="result-title">${matchedCharacter.name}</div>
+                    <div class="result-desc" style="text-align: center; font-size: 16px;">
+                        "${matchedCharacter.quote}"<br><br>
+                        快去胖揍他吧！
+                    </div>
+                    <button class="btn-primary" onclick="goToSelectedCharacter()">👊 去胖揍他</button>
+                </div>
+            `;
+        }
+
+        // 跳转到选中的渣男卡片
+        function goToSelectedCharacter() {
+            // 直接开始游戏，不经过选择页面
+            startGame();
+        }
+
+        // 分享测试结果
+        function shareTestResult(result) {
+            const text = `测出我的渣男类型是：${result}！你也来测测吧！`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: '渣男类型测试',
+                    text: text,
+                    url: window.location.href
+                }).catch(() => {
+                    alert('分享内容：\n' + text);
+                });
+            } else {
+                alert('分享内容：\n' + text);
+            }
+        }
+
+        // 初始化
+        initCharacterCards();
+
+        // 生成背景装饰星星
+        function generateBackgroundStars() {
+            const container = document.getElementById('bgDecoration');
+            if (!container) return;
+
+            const emojis = ['🔥', '💢', '💥', '✨', '💫', '👊'];
+            for (let i = 0; i < 15; i++) {
+                const star = document.createElement('div');
+                star.className = 'floating-star';
+                star.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (3 + Math.random() * 2) + 's';
+                container.appendChild(star);
+            }
+        }
+
+        // 页面加载时生成背景星星
+        generateBackgroundStars();
+    </script>
+</body>
+</html>

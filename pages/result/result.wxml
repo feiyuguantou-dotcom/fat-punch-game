@@ -1,0 +1,117 @@
+<!--pages/result/result.wxml-->
+<view class="page">
+  <!-- 成功提示 -->
+  <view class="success-header">
+    <view class="success-icon">🎉</view>
+    <view class="success-title">你已释怀啦!</view>
+    <view class="success-subtitle">打完就释怀,笑着向前看</view>
+  </view>
+
+  <!-- 释怀卡片 -->
+  <view class="card-container">
+    <view class="result-card">
+      <view class="card-header">
+        <view class="card-emoji">❤️</view>
+        <view class="card-title">释怀卡片</view>
+      </view>
+
+      <view class="card-content">
+        <view class="card-message">{{reliefMessage}}</view>
+      </view>
+
+      <view class="card-stats">
+        <view class="stat-item">
+          <view class="stat-value">{{gameResult.attackCount}}</view>
+          <view class="stat-label">暴揍次数</view>
+        </view>
+        <view class="stat-divider"></view>
+        <view class="stat-item">
+          <view class="stat-value">{{gameResult.maxCombo}}</view>
+          <view class="stat-label">最大连击</view>
+        </view>
+        <view class="stat-divider"></view>
+        <view class="stat-item">
+          <view class="stat-value">{{gameDurationText}}</view>
+          <view class="stat-label">游戏时长</view>
+        </view>
+      </view>
+
+      <view class="card-footer">
+        <view class="footer-text">{{gameResult.characterName}}已被你击败</view>
+        <view class="footer-date">{{currentDate}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button class="action-btn primary" bindtap="playAgain">
+      <view class="btn-icon">👊</view>
+      <view class="btn-text">再玩一次</view>
+    </button>
+    <button class="action-btn secondary" bindtap="shareResult">
+      <view class="btn-icon">📤</view>
+      <view class="btn-text">分享战绩</view>
+    </button>
+  </view>
+
+  <!-- 高级功能 -->
+  <view class="premium-features">
+    <view class="feature-title">解锁更多内容</view>
+    <view class="feature-list">
+      <view class="feature-item" bindtap="unlockFeature" data-feature="love">
+        <view class="feature-icon">💕</view>
+        <view class="feature-info">
+          <view class="feature-name">真爱测试</view>
+          <view class="feature-desc">测测你什么时候会遇到对的人</view>
+        </view>
+        <view class="feature-price">¥3</view>
+      </view>
+      <view class="feature-item" bindtap="unlockFeature" data-feature="karma">
+        <view class="feature-icon">⚡</view>
+        <view class="feature-info">
+          <view class="feature-name">报应预警</view>
+          <view class="feature-desc">前任什么时候会遭报应</view>
+        </view>
+        <view class="feature-price">¥3</view>
+      </view>
+      <view class="feature-item" bindtap="unlockFeature" data-feature="fortune">
+        <view class="feature-icon">🌸</view>
+        <view class="feature-info">
+          <view class="feature-name">桃花运分析</view>
+          <view class="feature-desc">你的恋爱运势分析</view>
+        </view>
+        <view class="feature-price">¥6</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分享引导 -->
+  <view class="share-guide">
+    <view class="guide-title">分享给姐妹们</view>
+    <view class="guide-desc">让更多人获得释怀</view>
+    <view class="share-buttons">
+      <button class="share-btn" open-type="share" bindtap="shareToChat">
+        <view class="share-icon">💬</view>
+        <view class="share-text">分享给好友</view>
+      </button>
+      <button class="share-btn" bindtap="generatePoster">
+        <view class="share-icon">🖼️</view>
+        <view class="share-text">生成海报</view>
+      </button>
+    </view>
+  </view>
+
+  <!-- 海报预览弹窗 -->
+  <view class="poster-modal {{showPosterModal ? 'show' : ''}}" wx:if="{{showPosterModal}}">
+    <view class="modal-mask" bindtap="closePosterModal"></view>
+    <view class="modal-content">
+      <view class="modal-title">分享战绩</view>
+      <canvas type="2d" id="posterCanvas" class="poster-canvas"></canvas>
+      <view class="modal-buttons">
+        <button class="modal-btn secondary" bindtap="closePosterModal">关闭</button>
+        <button class="modal-btn primary" bindtap="savePoster">保存图片</button>
+      </view>
+    </view>
+  </view>
+</view>

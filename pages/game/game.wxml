@@ -1,0 +1,156 @@
+<!--pages/game/game.wxml-->
+<view class="page">
+  <!-- 选择渣男类型界面 -->
+  <view class="select-screen" wx:if="{{gameState === 'select'}}">
+    <view class="header">
+      <view class="header-title">选择让你最不爽的类型</view>
+      <view class="header-subtitle">选择后开始暴揍</view>
+    </view>
+
+    <!-- 渣男类型卡片 -->
+    <scroll-view class="character-scroll" scroll-x="{{true}}" show-scrollbar="{{false}}">
+      <view class="character-list">
+        <view
+          class="character-card {{selectedCharacter === item.id ? 'active' : ''}}"
+          wx:for="{{characterTypes}}"
+          wx:key="id"
+          bindtap="selectCharacter"
+          data-id="{{item.id}}"
+        >
+          <view class="character-emoji">{{item.emoji}}</view>
+          <view class="character-name">{{item.name}}</view>
+          <view class="character-tagline">{{item.tagline}}</view>
+          <view class="card-mask" wx:if="{{selectedCharacter === item.id}}"></view>
+          <view class="card-check" wx:if="{{selectedCharacter === item.id}}">✓</view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 详细信息 -->
+    <view class="character-detail" wx:if="{{selectedCharacterInfo}}">
+      <view class="detail-title">{{selectedCharacterInfo.name}}</view>
+      <view class="detail-desc">{{selectedCharacterInfo.description}}</view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="action-btn skip-btn" bindtap="skipSelect">跳过</button>
+      <button class="action-btn confirm-btn" bindtap="confirmSelect">确认选择,开始</button>
+    </view>
+  </view>
+
+  <!-- 游戏战斗界面 -->
+  <view class="battle-screen" wx:if="{{gameState === 'battle'}}">
+    <!-- HUD信息栏 -->
+    <view class="hud-bar">
+      <view class="hud-left">
+        <view class="pause-btn" bindtap="pauseGame">⏸️</view>
+      </view>
+      <view class="hud-center">
+        <view class="blood-text">血量: {{blood}}/{{maxBlood}}</view>
+      </view>
+      <view class="hud-right">
+        <view class="combo-display" wx:if="{{combo > 2}}">
+          <text class="combo-number">连击 x{{combo}}!</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 游戏区域 -->
+    <view class="game-area" bindtap="handleAttack" bindtouchstart="handleTouchStart" bindtouchend="handleTouchEnd">
+      <!-- 渣男形象 -->
+      <view class="character-container">
+        <view class="character {{characterShaking ? 'shake' : ''}} {{characterTransforming ? 'transform' : ''}}" style="transform: scale({{characterScale}})">
+          <view class="character-emoji-large">{{currentCharacter.emoji}}</view>
+          <!-- 变身后的形象 -->
+          <view class="transformed-character" wx:if="{{transformedType}}">
+            <text class="transformed-emoji">{{transformedEmoji}}</text>
+          </view>
+        </view>
+
+        <!-- 血条 -->
+        <view class="blood-bar-container">
+          <view class="blood-bar-bg">
+            <view class="blood-bar-fill" style="width: {{bloodPercentage}}%; background: {{bloodColor}};"></view>
+          </view>
+          <view class="blood-text">{{blood}}/{{maxBlood}}</view>
+        </view>
+
+        <!-- 伤害数字显示 -->
+        <view class="damage-numbers">
+          <view
+            class="damage-number {{item.isCritical ? 'critical' : ''}}"
+            wx:for="{{damageNumbers}}"
+            wx:key="id"
+            style="left: {{item.x}}rpx; top: {{item.y}}rpx; opacity: {{item.opacity}};"
+          >
+            -{{item.damage}}
+          </view>
+        </view>
+      </view>
+
+      <!-- 连击提示 -->
+      <view class="combo-hint" wx:if="{{showComboHint}}">
+        <view class="combo-text">{{comboHintText}}</view>
+      </view>
+
+      <!-- 攻击特效粒子 -->
+      <view class="particles">
+        <view
+          class="particle"
+          wx:for="{{particles}}"
+          wx:key="id"
+          style="left: {{item.x}}rpx; top: {{item.y}}rpx; opacity: {{item.opacity}};"
+        >
+          {{item.icon}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 蓄力条 -->
+    <view class="charge-bar-container" wx:if="{{showChargeBar}}">
+      <view class="charge-bar-bg">
+        <view class="charge-bar-fill" style="width: {{chargeProgress}}%;"></view>
+      </view>
+      <view class="charge-text">蓄力中...</view>
+    </view>
+
+    <!-- 技能按钮 -->
+    <view class="skill-panel">
+      <view class="skill-item" bindtap="useSkill" data-skill="combo">
+        <view class="skill-icon">⚡</view>
+        <view class="skill-name">闪电五连鞭</view>
+        <view class="skill-cd" wx:if="{{skillCD.combo > 0}}">{{skillCD.combo}}s</view>
+      </view>
+      <view class="skill-item" bindtap="useSkill" data-skill="truth">
+        <view class="skill-icon">💣</view>
+        <view class="skill-name">真心话炸弹</view>
+        <view class="skill-lock" wx:if="{{!skillUnlocked.truth}}">🔒</view>
+      </view>
+      <view class="skill-item" bindtap="useSkill" data-skill="transform">
+        <view class="skill-icon">🐸</view>
+        <view class="skill-name">变形术</view>
+        <view class="skill-lock" wx:if="{{!skillUnlocked.transform}}">💰</view>
+      </view>
+    </view>
+
+    <!-- 渣男台词 -->
+    <view class="character-dialog" wx:if="{{showDialog}}">
+      <view class="dialog-bubble">
+        {{dialogText}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 暂停弹窗 -->
+  <view class="pause-modal" wx:if="{{isPaused}}">
+    <view class="modal-mask" bindtap="resumeGame"></view>
+    <view class="modal-content">
+      <view class="modal-title">游戏暂停</view>
+      <view class="modal-buttons">
+        <button class="modal-btn secondary" bindtap="resumeGame">继续游戏</button>
+        <button class="modal-btn primary" bindtap="exitGame">退出游戏</button>
+      </view>
+    </view>
+  </view>
+</view>

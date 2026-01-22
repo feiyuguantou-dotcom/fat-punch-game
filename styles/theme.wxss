@@ -1,0 +1,86 @@
+/* styles/theme.wxss - 主题样式变量 */
+
+/* 主题颜色 */
+.theme-primary {
+  --primary-color: #FF6B9D;
+  --secondary-color: #FFB6C1;
+  --accent-color: #FF4081;
+}
+
+/* 文字颜色 */
+.theme-text {
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-light: #999999;
+  --text-lighter: #CCCCCC;
+}
+
+/* 背景颜色 */
+.theme-background {
+  --background-primary: #FFF5F7;
+  --background-secondary: #FFFFFF;
+  --background-tertiary: #F5F5F5;
+}
+
+/* 功能颜色 */
+.theme-colors {
+  --color-success: #4CAF50;
+  --color-warning: #FF9800;
+  --color-danger: #F44336;
+  --color-info: #2196F3;
+  --color-purple: #9C27B0;
+}
+
+/* 游戏血量颜色 */
+.theme-blood {
+  --blood-high: #4CAF50;
+  --blood-mid: #FF9800;
+  --blood-low: #F44336;
+}
+
+/* 阴影 */
+.theme-shadow {
+  --shadow-sm: 0 2px 4px rgba(255, 107, 157, 0.08);
+  --shadow-md: 0 4px 12px rgba(255, 107, 157, 0.12);
+  --shadow-lg: 0 8px 24px rgba(255, 107, 157, 0.15);
+  --shadow-xl: 0 12px 32px rgba(255, 107, 157, 0.2);
+}
+
+/* 圆角 */
+.theme-radius {
+  --radius-sm: 8rpx;
+  --radius-md: 16rpx;
+  --radius-lg: 24rpx;
+  --radius-xl: 32rpx;
+  --radius-full: 9999rpx;
+}
+
+/* 间距 */
+.theme-spacing {
+  --spacing-xs: 8rpx;
+  --spacing-sm: 16rpx;
+  --spacing-md: 24rpx;
+  --spacing-lg: 32rpx;
+  --spacing-xl: 48rpx;
+  --spacing-2xl: 64rpx;
+}
+
+/* 字体大小 */
+.theme-font {
+  --font-xs: 20rpx;
+  --font-sm: 24rpx;
+  --font-md: 28rpx;
+  --font-lg: 32rpx;
+  --font-xl: 36rpx;
+  --font-2xl: 48rpx;
+  --font-3xl: 64rpx;
+}
+
+/* Z-index层级 */
+.theme-zindex {
+  --z-index-normal: 1;
+  --z-index-tooltip: 10;
+  --z-index-fixed: 100;
+  --z-index-modal: 1000;
+  --z-index-popover: 2000;
+}

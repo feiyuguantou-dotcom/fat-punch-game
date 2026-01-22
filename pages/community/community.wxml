@@ -1,0 +1,56 @@
+<!--pages/community/community.wxml-->
+<view class="page">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="header-title">释怀树洞</view>
+    <view class="header-subtitle">分享你的故事,获取温暖支持</view>
+  </view>
+
+  <!-- 发布按钮 -->
+  <view class="publish-btn" bindtap="publishPost">
+    <view class="publish-icon">✍️</view>
+    <view class="publish-text">分享你的故事...</view>
+  </view>
+
+  <!-- 帖子列表 -->
+  <view class="posts-list">
+    <view class="post-item" wx:for="{{posts}}" wx:key="id">
+      <view class="post-header">
+        <view class="post-avatar">{{item.avatar}}</view>
+        <view class="post-info">
+          <view class="post-author">{{item.author}}</view>
+          <view class="post-time">{{item.time}}</view>
+        </view>
+      </view>
+
+      <view class="post-content">{{item.content}}</view>
+
+      <view class="post-tags" wx:if="{{item.tags}}">
+        <view class="tag" wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag">
+          #{{tag}}
+        </view>
+      </view>
+
+      <view class="post-actions">
+        <view class="action-item" bindtap="likePost" data-id="{{item.id}}">
+          <view class="action-icon">{{item.liked ? '❤️' : '🤍'}}</view>
+          <view class="action-text">{{item.likeCount}}</view>
+        </view>
+        <view class="action-item" bindtap="commentPost" data-id="{{item.id}}">
+          <view class="action-icon">💬</view>
+          <view class="action-text">{{item.commentCount}}</view>
+        </view>
+        <view class="action-item" bindtap="sendHug" data-id="{{item.id}}">
+          <view class="action-icon">🤗</view>
+          <view class="action-text">拥抱</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{posts.length === 0}}">
+      <view class="empty-icon">💬</view>
+      <view class="empty-text">还没有帖子,快来发布第一条吧~</view>
+    </view>
+  </view>
+</view>
